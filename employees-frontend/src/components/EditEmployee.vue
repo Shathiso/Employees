@@ -1,26 +1,57 @@
 <script setup>
   import {ref, onMounted, inject} from "vue"
+  import { useQuasar } from 'quasar'
+  import { storeToRefs} from "pinia"
 
+  //Inject the store
   const $store = inject('store');
   const $employeeStore = $store.employeeStore();
 
-  let employeeDetails = ref([]);
+  const { employee } = storeToRefs($employeeStore);
+  const employeeDetails = ref(employee.value);
 
-  defineEmits(['close']);
+  console.log(employeeDetails.value)
 
-  defineProps({
+  const $q = useQuasar();
+  const $emits = defineEmits(['close']);
+
+  const props = defineProps({
     id: {
-      type: String,
+      type: Number,
       required: true
     }
   })
 
   onMounted(() => {
-    employeeDetails.value = $employeeStore.fetchEmployee(id);
+
+    //fetch the employee details
+    $employeeStore.fetchEmployee(props.id);
+
+    $q.loading.show({
+        delay: 0 // ms
+    })
+
+    setTimeout(() => {
+      $q.loading.hide();   
+    }, 4000);
+
+    
   });
 
+
+  //Watch the store for changes
+  $employeeStore.$subscribe((mutation, state) => {
+    
+      if(state.employee.first_name != ''){
+        
+        console.log(state.employee)
+      }
+  
+  })
+
+
   function addSkill(){
-    employeeDetails.value.skills.push({
+    employee.value.skills.push({
       skill: '',
       years_of_experience: '',
       seniority_rating: ''
@@ -28,13 +59,21 @@
   }
 
   function deleteSkill(index){
-    employeeDetails.value.skills.splice(index, 1);
+    employee.value.skills.splice(index, 1);
   }
 
 
   function updateEmployee(){
-    let data = employeeDetails.value;
-    $employeeStore.updateEmployee(id, data);
+    let data = employee.value;
+    const response = $employeeStore.updateEmployee(id, data);
+
+    if(response.success){
+
+      //Emit and close the modal
+      $emit('close');
+
+      $q.notify('Employee details were updated successfully..');
+    }
   }
 
 </script>
@@ -42,7 +81,7 @@
 <template>
   <div class=" absolute left-0 top-0 h-[98vh] overflow-y-scroll overflow-x-hidden max-w-[850px] w-[50%]  flex flex-nowrap flex-col rounded-md justify-center align-items-center text-center pt-[20px] pb-[20px] px-6 bg-white text-black" >
     <q-btn @click="$emit('close')" class="absolute right-4 top-4 mb-6" label="Close"/>
-    <h1 class="text-3xl mb-8">New employee</h1>
+    <h1 class="text-3xl mb-8">Edit employee</h1>
     <div class="flex align-items-center text-center flex-nowrap flex-col ">   
       
       <label>Basic Info</label>
@@ -51,7 +90,7 @@
         <!-- Firstname input -->
         <div class="relative mb-6 inline-block flex-1">
           <q-input  class="pl-2"
-            v-model="employeeDetails.data.first_name"
+            v-model="employeeDetails.first_name"
             label="First name"
             :rules="[val => !!val || 'Field is required']"
             error-message="Please enter your first name"
@@ -60,19 +99,19 @@
         <!-- Lastname input -->
         <div class="relative mb-6 inline-block flex-1">
           <q-input  class="pl-2"
-            v-model="employeeDetails.data.last_name"
+            v-model="employeeDetails.last_name"
             label="Last name"
             :rules="[val => !!val || 'Field is required']"
             error-message="Please enter your last name"
            />
-        </div>
+        </div> 
       </div>
 
       <div class="flex">
         <!-- Lastname input -->
         <div class="relative mb-6 inline-block flex-1">
           <q-input  class="pl-2"
-            v-model="employeeDetails.data.contact_number"
+            v-model="employeeDetails.contact_number"
             label="Contact Number"
             :rules="[val => !!val || 'Field is required']"
             error-message="Please enter your contact number"
@@ -82,7 +121,7 @@
         <!-- Email input -->
         <div class="relative mb-6 inline-block flex-1">
           <q-input  class="pl-2"
-            v-model="employeeDetails.data.email_address"
+            v-model="employeeDetails.email_address"
             label="Email"
             :rules="[val => !!val || 'Field is required']"
             error-message="Please enter your email address"
@@ -93,7 +132,7 @@
       <!-- birth_date -->
       <div class="relative mb-6">
         <q-input  class="pl-2"
-          v-model="employeeDetails.data.birth_date"
+          v-model="employeeDetails.birth_date"
           label="Birth Date"
           :rules="[val => !!val || 'Field is required']"
           error-message="Please enter your birth date"
@@ -105,7 +144,7 @@
       <!-- street_address -->
       <div class="relative mb-6">
         <q-input  class="pl-2"
-          v-model="employeeDetails.data.street_address"
+          v-model="employeeDetails.street_address"
           label="Street Address"
           :rules="[val => !!val || 'Field is required']"
           error-message="Please enter your street address"
@@ -116,7 +155,7 @@
         <!-- city -->
         <div class="relative mb-6 inline-block flex-1">
           <q-input  class="pl-2"
-            v-model="employeeDetails.data.city"
+            v-model="employeeDetails.city"
             label="City"
             :rules="[val => !!val || 'Field is required']"
             error-message="Please enter your city"
@@ -125,7 +164,7 @@
         <!-- postal_code -->
         <div class="relative mb-6 inline-block flex-1">
           <q-input  class="pl-2"
-            v-model="employeeDetails.data.postal_code"
+            v-model="employeeDetails.postal_code"
             label="Postal Code"
             :rules="[val => !!val || 'Field is required']"
             error-message="Please enter your postal code"
@@ -135,7 +174,7 @@
         <!-- country -->
         <div class="relative mb-6 inline-block flex-1">
           <q-input  class="pl-2"
-            v-model="employeeDetails.data.country"
+            v-model="employeeDetails.country"
             label="Country"
             :rules="[val => !!val || 'Field is required']"
             error-message="Please enter your postal code"
@@ -165,7 +204,7 @@
             :rules="[val => !!val || 'Field is required']"
             error-message="Please enter your seniority rating"
             label="Seniority Rating" class="inline-block flex-1 ml-2"  />
-            
+
           <q-btn class="ml-2" @click="deleteSkill(index)" icon="delete" />
         </div>
 

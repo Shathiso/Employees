@@ -69,27 +69,21 @@ export const employeeStore = defineStore('employeeStore', {
       await axios.get(`http://127.0.0.1:8000/api/employees/${id}`, {
       })
       .then(function (response) {
-        if(response.employee){
-          $this.employee.first_name     = response.employee.first_name;
-          $this.employee.last_name      = response.employee.last_name;
-          $this.employee.email_address  = response.employee.email_address;
-          $this.employee.contact_number = response.employee.contact_number;
-          $this.employee.postal_code    = response.employee.postal_code;
-          $this.employee.birth_date     = response.employee.birth_date;
-          $this.employee.street_address = response.employee.street_address;
-          $this.employee.city           = response.employee.city;
-          $this.employee.country        = response.employee.country;
-          $this.employee.first_name     = response.employee.first_name;
+        if(response.data.employee){
+          $this.employee.first_name     = response.data.employee.first_name;
+          $this.employee.last_name      = response.data.employee.last_name;
+          $this.employee.email_address  = response.data.employee.email_address;
+          $this.employee.contact_number = response.data.employee.contact_number;
+          $this.employee.postal_code    = response.data.employee.postal_code;
+          $this.employee.birth_date     = response.data.employee.birth_date;
+          $this.employee.street_address = response.data.employee.street_address;
+          $this.employee.city           = response.data.employee.city;
+          $this.employee.country        = response.data.employee.country;
+          $this.employee.first_name     = response.data.employee.first_name;
 
 
-          $this.employee.skills = response.skills;
+          $this.employee.skills = response.data.skills;
 
-          let employee = {
-             data:response.employee,
-             skills:response.skills
-          }
-
-          return employee;
         }
       })
       .catch(function (error) {

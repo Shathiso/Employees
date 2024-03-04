@@ -16,7 +16,7 @@
   let initialEmployeesList = employees;
   let show_add_form = ref(false);
   let show_edit_form = ref(false);
-  let employeeId = ref('');
+  let employeeId = ref(0);
 
   let searchText = ref('');
   let filterOptions = ref([
@@ -132,7 +132,7 @@
     </div>
 
     <AddEmployee v-if="show_add_form" @close="closeModal()" />
-    <EditEmployee v-if="show_edit_form" @close="closeModal()" id="employeeId" />
+    <EditEmployee v-if="show_edit_form" @close="closeModal()" :id="employeeId" />
   </div>
 </template>
 
