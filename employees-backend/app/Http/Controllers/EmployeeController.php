@@ -34,12 +34,15 @@ class EmployeeController extends Controller
                 'country'         => $request->input('country')
             ]);
 
+
+            $skillsArray =  $request->input('skills');
+
             //Store the skills
-            foreach ($request->input('skills') as $skill){
+            for($i = 0; $i < count($skillsArray); $i++){
                 $storedSkill = Skills::create([
-                    'skill'               => $skill->skill,
-                    'years_of_experience' => $skill->years_of_experience,
-                    'seniority_rating'    => $skill->seniority_rating
+                    'skill'               => $skillsArray[$i]['skill'],
+                    'years_of_experience' => $skillsArray[$i]['years_of_experience'],
+                    'seniority_rating'    => $skillsArray[$i]['seniority_rating']
                 ]);
 
                 //Store the ids in the pivot table
@@ -65,7 +68,7 @@ class EmployeeController extends Controller
             'contact_number'  => 'required',
             'email_address'  => 'required', 
             'birth_date'  => 'required', 
-            'street_address'  => 'street_address',   
+            'street_address'  => 'required',   
             'city'  => 'required',          
             'postal_code'  => 'required',   
             'country'  => 'required'       
