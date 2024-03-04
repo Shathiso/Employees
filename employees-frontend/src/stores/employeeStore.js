@@ -18,6 +18,10 @@ export const employeeStore = defineStore('employeeStore', {
       skills: []
     },
     errors: [],
+    status:{
+      name: '',
+      message: ''
+    }
   }),
 
   actions: {
@@ -50,8 +54,9 @@ export const employeeStore = defineStore('employeeStore', {
         skills: data.skills,
       })
       .then(function (response) {
-        if(response){
-          return response;
+        if(response.data.success){
+          $this.status.name = 'added';
+          $this.status.message = response.data.success;
         }
       })
       .catch(function (error) {
@@ -107,10 +112,9 @@ export const employeeStore = defineStore('employeeStore', {
       });
     },
 
-    async deleteEmployee(id, data){
+    async deleteEmployee(id){
       const $this = this
       await axios.post(`http://127.0.0.1:8000/api/employees/${id}/delete`, {
-       data:data
       })
       .then(function (response) {
         if(response){
