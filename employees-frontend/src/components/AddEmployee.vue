@@ -49,9 +49,40 @@
     skills.value.splice(index, 1);
   }
 
+  //Watching the store for changes to the state
+  $employeeStore.$subscribe((mutation, state) => {
+
+    if(state.status.name == 'added'){
+
+      setTimeout(() => {
+        $q.loading.hide()
+
+        //clear the fields
+        clearFields();
+
+        //Emit and close the modal
+        $emit('close');
+
+        //Display the notification
+        $q.notify('Employee details were added successfully..');
+
+        //Reset the store status 
+        $employeeStore.$patch((state) => {
+          state.status = {
+              name: '',
+              message: ''
+            }
+        });
+
+        //Fetch the latest Employees
+        $employeeStore.fetchEmployees();
+      }, 4000);
+    }
+  })
+
 
   function addEmployee(){
-    
+    //Prepare the data
     let data = {
       first_name: first_name.value,
       last_name: last_name.value,
@@ -65,19 +96,15 @@
       skills: skills._rawValue,
     }
 
-    const response = $employeeStore.addEmployee(data);
+    //Store the employee details
+    $employeeStore.addEmployee(data);
 
-    if(response.success == true){
-      
-      //clear the fields
-      clearFields();
-
-      //Emit and close the modal
-      $emit('close');
-
-      $q.notify('Employee details were added successfully..');
-    }
+    //Display the loader 
+    $q.loading.show({
+      delay: 0 // ms
+    })
   }
+
 
   function clearFields(){
      first_name.value = '';
