@@ -27,7 +27,7 @@ export const employeeStore = defineStore('employeeStore', {
       await axios.get('http://127.0.0.1:8000/api/employees', {
       })
       .then(function (response) {
-        $this.employees = response.employees
+        $this.employees = response.data.employees
       })
       .catch(function (error) {
         $this.errors.push(error)
@@ -38,7 +38,16 @@ export const employeeStore = defineStore('employeeStore', {
 
       const $this = this
       await axios.post('http://127.0.0.1:8000/api/employees', {
-       data:data
+        first_name: data.first_name,
+        last_name: data.last_name,
+        email_address: data.email_address,
+        contact_number: data.contact_number,
+        birth_date : data.birth_date,
+        street_address : data.street_address,
+        city : data.city,
+        postal_code : data.postal_code,
+        country : data.country,
+        skills: data.skills,
       })
       .then(function (response) {
         if(response){
