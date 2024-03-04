@@ -49,7 +49,18 @@
   }
 
   function deleteEmployee(id){
+
     $employeeStore.deleteEmployee(id);
+
+    $q.loading.show({
+        delay: 400 // ms
+    })
+    
+     setTimeout(() => {
+      $employeeStore.fetchEmployees();
+      $q.loading.hide();
+      $q.notify('Employee was deleted successfully');
+     }, 4000);
   }
 
   function searchEmployee(){
@@ -81,7 +92,7 @@
 
       <!-- Filters -->
       <span v-if="employees">
-        <q-input type="text" v-model="searchText" />
+        <q-input type="text" outlined v-model="searchText" color="white" placeholder="Please enter a firstname, lastname or email" />
         <q-select square outlined v-model="filterText" :options="filterOptions" label="Square outlined" />
       </span>
  
@@ -100,7 +111,7 @@
       <!-- Employee List -->
       <div v-if="employees">
          <div v-for="(employee, index) in employees">
-            <div class="bg-gray-400 flex justify-between flex-wrap rounded-md padding-top: 14px;">
+            <div class="bg-gray-400 flex justify-between flex-wrap rounded-md padding-top: 14px; mb-3">
               <div class="flex-1 p-[16px]">
                 <div class="inline-block relative">
                   <span v-text="index + 1" class="flex content-center justify-center align-center border border-fuchsia-950 text-fuchsia-950 ml-2  mr-3 rounded-full p-2 h-[24px] w-[24px]"></span>
