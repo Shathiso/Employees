@@ -100,14 +100,20 @@
       <!-- Employee List -->
       <div v-if="employees">
          <div v-for="(employee, index) in employees">
-            <div class="bg-gray-400">
-              <span v-text="index + 1" class=" border border-fuchsia-950 text-fuchsia-950"></span>
-              <span v-text="employee.first_name" class="text-white"></span>
-              <span v-text="employee.last_name" class="text-white"></span>
-              <span v-text="employee.contact_number" class="text-white"></span>
+            <div class="bg-gray-400 flex justify-between flex-wrap rounded-md padding-top: 14px;">
+              <div class="flex-1 p-[16px]">
+                <div class="inline-block relative">
+                  <span v-text="index + 1" class="flex content-center justify-center align-center border border-fuchsia-950 text-fuchsia-950 ml-2  mr-3 rounded-full p-2 h-[24px] w-[24px]"></span>
+                </div>
+                <span v-text="employee.first_name" class="text-white mr-6"></span>
+                <span v-text="employee.last_name" class="text-white mr-6"></span>
+                <span v-text="employee.contact_number" class="text-white mr-6"></span>
+              </div>
 
-              <q-btn @click="editEmployee(employee.id)" icon="ModeEditOutlineOutlined">  </q-btn>
-              <q-btn @click="deleteEmployee(employee.id)" icon="DeleteOutline">  </q-btn>
+              <div class="flex justify-between">
+                <q-btn @click="editEmployee(employee.id)" class="mr-2" icon="draw" title="edit employee">  </q-btn>
+                <q-btn @click="deleteEmployee(employee.id)" class="mr-2" icon="delete" title="delete employee">  </q-btn>
+              </div>
             </div>
          </div>
       </div>
