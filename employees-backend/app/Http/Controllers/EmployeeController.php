@@ -78,16 +78,16 @@ class EmployeeController extends Controller
     }
 
 
-    public function show($id){
+    public function show(int $id){
         try {
             $employee = Employee::findOrFail($id);
-            $skills   = Employees_skills::where('employee_id', $employee->id);
 
             $skills = DB::table('skills')
             ->select('skill', 'years_of_experience', 'seniority_rating')
-            ->join('employees_skills', function (JoinClause $join, $employee) {
-               $join->on('employees_skills.employee_id', '=', $employee->id);
+            ->join('employees_skills', function (JoinClause $join) {
+               $join->on('employees_skills.skill_id', '=', 'skills.id');
             })
+            ->where('employees_skills.employee_id', '=', $id)
             ->get();
 
 
