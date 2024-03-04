@@ -1,6 +1,6 @@
 import './assets/main.css'
 
-import { Quasar, Dialog } from "quasar";
+import { Quasar, Dialog, Loading, Notify } from "quasar";
 import piniaPersist from 'pinia-plugin-persist'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -34,7 +34,9 @@ app.use(router)
 
 app.use(Quasar, {
     plugins: {
-        Dialog
+        Dialog,
+        Loading,
+        Notify
     }
 });
 
