@@ -249,7 +249,7 @@
             error-message="Please enter your seniority rating"
             label="Seniority Rating" class="inline-block flex-1 ml-2"  />
 
-          <q-btn class="ml-2 max-w-[16px] h-[16] relative top-[10px]" @click="deleteSkill(index)" v-if="index > 0"  icon="trash" />
+          <q-btn class="ml-2 relative top-[14px] max-w-[30px] max-h-[30px]" @click="deleteSkill(index)" v-if="index > 0"  icon="delete" />
         </div>
 
         <q-btn @click="addSkill()" icon="add" class="my-6 w-full text-black">Add New skill</q-btn>
