@@ -26,6 +26,7 @@ export const employeeStore = defineStore('employeeStore', {
 
   actions: {
 
+    //Fetch Employee list
     async fetchEmployees() {
       const $this = this
       await axios.get('http://127.0.0.1:8000/api/employees', {
@@ -38,6 +39,7 @@ export const employeeStore = defineStore('employeeStore', {
       });
     },
 
+    //Add Employee method
     async addEmployee(data) {
 
       const $this = this
@@ -64,6 +66,7 @@ export const employeeStore = defineStore('employeeStore', {
       });
     },
 
+    //Fetch employee details for the edit modal
     async fetchEmployee(id){
       const $this = this
       await axios.get(`http://127.0.0.1:8000/api/employees/${id}`, {
@@ -91,14 +94,16 @@ export const employeeStore = defineStore('employeeStore', {
       });
     },
 
-    async updateEmployee(id, data){
+    //Update Employee method
+    async updateEmployee(id){
       const $this = this
-      await axios.put(`http://127.0.0.1:8000/api/employees/${id}`, {
-        data:data
+      await axios.post(`http://127.0.0.1:8000/api/employees/${id}/update`, {
+        data:$this.employee
       })
       .then(function (response) {
-        if(response){
-          return response;
+        if(response.data.success){
+          $this.status.name = 'updated';
+          $this.status.message = response.data.success;
         }
       })
       .catch(function (error) {
@@ -106,6 +111,7 @@ export const employeeStore = defineStore('employeeStore', {
       });
     },
 
+    //Delete Employee method
     async deleteEmployee(id){
       const $this = this
       await axios.post(`http://127.0.0.1:8000/api/employees/${id}/delete`, {
