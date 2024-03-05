@@ -1,5 +1,5 @@
 <script setup>
-  import {ref, inject, defineEmits, computed} from "vue"
+  import {ref, inject, computed} from "vue"
 
   import { useQuasar } from 'quasar'
 
