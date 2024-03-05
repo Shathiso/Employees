@@ -106,22 +106,23 @@ class EmployeeController extends Controller
     public function update(Request $request, int $id){
         try {
 
-            $this->ValidateEntry($request);
-
             $employee = Employee::findOrFail($id);
-            $employee->first_name = $request->first_name;
-            $employee->last_name = $request->last_name;
-            $employee->contact_number = $request->contact_number;
-            $employee->email_address = $request->email_address;
-            $employee->birth_date = $request->birth_date;
-            $employee->street_address = $request->street_address;
-            $employee->city = $request->city;
-            $employee->postal_code = $request->postal_code;
-            $employee->country = $request->country;
+            $employee->first_name = $request->data['first_name'];
+            $employee->last_name = $request->data['last_name'];
+            $employee->contact_number = $request->data['contact_number'];
+            $employee->email_address = $request->data['email_address'];
+            $employee->birth_date = $request->data['birth_date'];
+            $employee->street_address = $request->data['street_address'];
+            $employee->city = $request->data['city'];
+            $employee->postal_code = $request->data['postal_code'];
+            $employee->country = $request->data['country'];
 
             $employee->save();
 
-            return response()->json(['message' => 'Employee details updated.'], 200);
+            //Save the employee skills
+
+
+            return response()->json(['success'=> true], 200);
 
         } catch (\Exception $e) {
             return response()->json([

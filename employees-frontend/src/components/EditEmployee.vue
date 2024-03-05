@@ -10,10 +10,9 @@
   const { employee } = storeToRefs($employeeStore);
   const employeeDetails = ref(employee.value);
 
-  console.log(employeeDetails.value)
 
   const $q = useQuasar();
-  const $emits = defineEmits(['close']);
+  const $emit = defineEmits(['close']);
 
   const props = defineProps({
     id: {
@@ -39,14 +38,31 @@
   });
 
 
-  //Watch the store for changes
+  //Watch the store for changes to the status
   $employeeStore.$subscribe((mutation, state) => {
-    
-      if(state.employee.first_name != ''){
-        
-        console.log(state.employee)
-      }
-  
+    if(state.status.name == 'updated'){
+
+      setTimeout(() => {
+        $q.loading.hide()
+
+        //Emit and close the modal
+        $emit('close');
+
+        //Show the confirmation msg
+        $q.notify('Employee details were updated successfully..');
+
+        //Reset the store status 
+        $employeeStore.$patch((state) => {
+          state.status = {
+            name: '',
+            message: ''
+          }
+        });
+
+        //Repopulate the employee List
+        $employeeStore.fetchEmployees();
+      }, 4000);
+    }
   })
 
 
@@ -63,17 +79,12 @@
   }
 
 
-  function updateEmployee(){
-    let data = employee.value;
-    const response = $employeeStore.updateEmployee(id, data);
+  function updateEmployeeDetails(){
+    $employeeStore.updateEmployee(props.id);
 
-    if(response.success){
-
-      //Emit and close the modal
-      $emit('close');
-
-      $q.notify('Employee details were updated successfully..');
-    }
+    $q.loading.show({
+      delay: 0 // ms
+    })
   }
 
 </script>
@@ -205,7 +216,7 @@
             error-message="Please enter your seniority rating"
             label="Seniority Rating" class="inline-block flex-1 ml-2"  />
 
-          <q-btn class="ml-2" @click="deleteSkill(index)" icon="delete" />
+          <q-btn class="ml-2 relative top-[14px] max-w-[30px] max-h-[30px]" @click="deleteSkill(index)" icon="delete" />
         </div>
 
         <q-btn @click="addSkill()" icon="add" class="my-6 w-full">Add New skill</q-btn>
@@ -217,8 +228,8 @@
           type="button"
           class="inline-block rounded text-white  bg-fuchsia-950 px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal transition duration-150 ease-in-out hover:bg-primary-600"
           icon="add"
-          label="Save and Add Employee"
-          @click="updateEmployee()"
+          label="Update Employee Details"
+          @click="updateEmployeeDetails()"
            />
       </div>
     </div>

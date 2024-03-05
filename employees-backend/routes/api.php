@@ -17,5 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('employees', [\App\Http\Controllers\EmployeeController::class, 'index']);
 Route::post('employees', [\App\Http\Controllers\EmployeeController::class, 'store']);
 Route::get('employees/{id}', [\App\Http\Controllers\EmployeeController::class, 'show']);
-Route::put('employees/{id}', [\App\Http\Controllers\EmployeeController::class, 'update']);
+Route::post('employees/{id}/update', [\App\Http\Controllers\EmployeeController::class, 'update']);
 Route::post('employees/{id}/delete', [\App\Http\Controllers\EmployeeController::class, 'delete']);
