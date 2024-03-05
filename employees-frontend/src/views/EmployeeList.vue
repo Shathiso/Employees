@@ -102,11 +102,12 @@
     <div class="nav flex justify-between">
       <span>
         <h4 class="">Employees</h4>
-        <div v-if="!employees">No employees</div>
+        <div v-if="!employeeDetails">No employees</div>
+        <div v-if="employeeDetails">There are {{ employeeDetails.length }} employees</div>
       </span>
 
       <!-- Filters -->
-      <span v-if="employees">
+      <span v-if="employeeDetails">
         <input type="text" class="border border-white h-[40px] px-[9px] rounded-md bg-transparent" @keyup="searchEmployees()"  v-model="searchText" color="white" placeholder="Please enter a firstname, lastname or email" />
         <q-select outlined v-model="filterText" color="white" :options="filterOptions" @change="filterEmployees()" label="Square outlined" />
       </span>
