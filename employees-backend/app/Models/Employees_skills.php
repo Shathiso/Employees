@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Employees_skills extends Model
 {
@@ -15,13 +15,13 @@ class Employees_skills extends Model
         'skill_id'
     ];
 
-    public function employees(): BelongsTo
+    public function employees(): BelongsToMany
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsToMany(Employee::class);
     }
 
-    public function skills(): BelongsTo
+    public function skills(): BelongsToMany
     {
-        return $this->belongsTo(Skills::class);
+        return $this->belongsToMany(Skills::class);
     }
 }

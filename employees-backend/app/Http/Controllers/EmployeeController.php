@@ -119,10 +119,55 @@ class EmployeeController extends Controller
 
             $employee->save();
 
-            //Save the employee skills
+            //Remove the old skills
+            $employeeSkillsArray = $employee->employees_skills;
 
+            if(count($employeeSkillsArray) > 0){
 
-            return response()->json(['success'=> true], 200);
+                //Remove skills 
+                for($i = 0; $i < count($employeeSkillsArray); $i++){
+                    $e_skill = Skills::findOrFail($employeeSkillsArray[$i]['skill_id']);
+                    $e_skill->delete();
+                }
+
+                //Re-insert the new skills
+                $skillsArray =  $request->data['skills'];
+
+                //Store the skills
+                for($i = 0; $i < count($skillsArray); $i++){
+                    $storedSkill = Skills::create([
+                        'skill'               => $skillsArray[$i]['skill'],
+                        'years_of_experience' => $skillsArray[$i]['years_of_experience'],
+                        'seniority_rating'    => $skillsArray[$i]['seniority_rating']
+                    ]);
+
+                    //Store the ids in the pivot table
+                    Employees_skills::create([
+                        'employee_id' => $id,
+                        'skill_id'    => $storedSkill->id
+                    ]);
+                }
+            } else{
+                //insert the new skills
+                $skillsArray =  $request->data['skills'];
+
+                //Store the skills
+                for($i = 0; $i < count($skillsArray); $i++){
+                    $storedSkill = Skills::create([
+                        'skill'               => $skillsArray[$i]['skill'],
+                        'years_of_experience' => $skillsArray[$i]['years_of_experience'],
+                        'seniority_rating'    => $skillsArray[$i]['seniority_rating']
+                    ]);
+
+                    //Store the ids in the pivot table
+                    Employees_skills::create([
+                        'employee_id' => $id,
+                        'skill_id'    => $storedSkill->id
+                    ]);
+                }
+            }
+
+            return response()->json(['success'=> true], 200); 
 
         } catch (\Exception $e) {
             return response()->json([

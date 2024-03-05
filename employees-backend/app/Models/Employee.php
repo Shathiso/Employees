@@ -24,7 +24,7 @@ class Employee extends Model
 
     public function skills()
     {
-        return $this->hasMany(Skills::class)->withTimestamps();
+        return $this->hasMany(Skills::class);
     }
 
     public function employees_skills(): HasMany
