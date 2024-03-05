@@ -12,15 +12,16 @@
   const $employeeStore = $store.employeeStore();
 
   const { employees } = storeToRefs($employeeStore);
+  let employeeDetails = ref(employees.value);
+  let initialEmployeeDetails = ref(employeeDetails.value);
 
-  let initialEmployeesList = employees;
   let show_add_form = ref(false);
   let show_edit_form = ref(false);
   let employeeId = ref(0);
 
   let searchText = ref('');
   let filterOptions = ref([
-    'first_name', 'last_name', 'contact_number'
+    'year', 'birth_date', 'skill'
   ]);
   let filterText = ref('');
 
@@ -35,19 +36,23 @@
     show_edit_form.value = false;
   }
 
+  //Fetch list of employees
   function fetchEmployees(){
     $employeeStore.fetchEmployees();
   }
 
+  //Show the add employee modal
   function addEmployeeFn(){
     show_add_form.value = true;
   }
 
+  //Show the edit employee modal
   function editEmployee(id){
     employeeId.value = id;
     show_edit_form.value = true;
   }
 
+  //delete employee
   function deleteEmployee(id){
 
     $employeeStore.deleteEmployee(id);
@@ -63,12 +68,22 @@
      }, 4000);
   }
 
-  function searchEmployee(){
-    //$employeeStore.deleteEmployee(id);
-  }
+  function searchEmployees(){
 
-  function filterEmployee(){
-    //$employeeStore.deleteEmployee(id);
+    //Reset the List
+    employeeDetails.value = initialEmployeeDetails.value;
+
+    employeeDetails.value = employeeDetails.value.filter((employee) =>{
+      let search = searchText.value.toLowerCase(); 
+      return  (employee.first_name.toLowerCase().indexOf(search) > -1) || 
+              (employee.last_name.toLowerCase().indexOf(search) > -1)  || 
+              (employee.email_address.toLowerCase().indexOf(search) > -1);
+    })
+
+    //Reset the search
+    if(searchText.value == ''){
+      employeeDetails.value = initialEmployeeDetails.value;
+    }
   }
 
   defineExpose({
@@ -81,7 +96,7 @@
 </script>
 
 <template>
-  <div class="flex justify-center flex-col min-h-[100vh]" >
+  <div class="flex mt-[40px] flex-col min-h-[100vh]" >
 
     <!-- Header -->
     <div class="nav flex justify-between">
@@ -92,8 +107,8 @@
 
       <!-- Filters -->
       <span v-if="employees">
-        <q-input type="text" outlined v-model="searchText" color="white" placeholder="Please enter a firstname, lastname or email" />
-        <q-select square outlined v-model="filterText" :options="filterOptions" label="Square outlined" />
+        <input type="text" class="border border-white h-[40px] px-[9px] rounded-md bg-transparent" @keyup="searchEmployees()"  v-model="searchText" color="white" placeholder="Please enter a firstname, lastname or email" />
+        <q-select outlined v-model="filterText" color="white" :options="filterOptions" @change="filterEmployees()" label="Square outlined" />
       </span>
  
       <q-btn unelevated rounded color="primary" class="max-h-[40px]"  @click="addEmployeeFn()" label="New Employee" icon="add" />
@@ -102,15 +117,15 @@
     <!-- Employee List Wrapper -->
     <div>
       <!-- No employees -->
-      <div v-if="!employees" class="flex mt-[60px] justify-center flex-col text-center">
+      <div v-if="!employeeDetails" class="flex mt-[60px] justify-center flex-col text-center">
         <img :src="logoSrc" class="max-w-[400px] empty-list-img" />
         <div class="my-6">There is nothing here</div>
         <div>Create a new employee by clicking the <br> New Employee button to get started</div>
       </div>
 
       <!-- Employee List -->
-      <div v-if="employees">
-         <div v-for="(employee, index) in employees">
+      <div v-if="employeeDetails">
+         <div v-for="(employee, index) in employeeDetails">
             <div class="bg-gray-400 flex justify-between flex-wrap rounded-md padding-top: 14px; mb-3">
               <div class="flex-1 p-[16px]">
                 <div class="inline-block relative">
