@@ -9,7 +9,7 @@ This employees demo application consists of a Vue-3 frontend and a Laravel Backe
 cd employees-backend
 ```
 
-### Update the db connect setting in the employees-backend -> env -> DB_CONNECTION section eg.
+### Update the db connection settings in the employees-backend -> env -> DB_CONNECTION section eg.
 
 ```sh
 DB_CONNECTION=mysql
