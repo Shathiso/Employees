@@ -12,8 +12,7 @@
   const $employeeStore = $store.employeeStore();
 
   const { employees } = storeToRefs($employeeStore);
-  let employeeDetails = ref(employees.value);
-  let initialEmployeeDetails = ref(employeeDetails.value);
+  let initialEmployeeDetails = ref(employees.value);
 
   let show_add_form = ref(false);
   let show_edit_form = ref(false);
@@ -70,10 +69,7 @@
 
   function searchEmployees(){
 
-    //Reset the List
-    employeeDetails.value = initialEmployeeDetails.value;
-
-    employeeDetails.value = employeeDetails.value.filter((employee) =>{
+    employees.value = employees.value.filter((employee) =>{
       let search = searchText.value.toLowerCase(); 
       return  (employee.first_name.toLowerCase().indexOf(search) > -1) || 
               (employee.last_name.toLowerCase().indexOf(search) > -1)  || 
@@ -82,7 +78,7 @@
 
     //Reset the search
     if(searchText.value == ''){
-      employeeDetails.value = initialEmployeeDetails.value;
+      fetchEmployees();
     }
   }
 
@@ -102,12 +98,12 @@
     <div class="nav flex justify-between">
       <span>
         <h4 class="">Employees</h4>
-        <div v-if="!employeeDetails">No employees</div>
-        <div v-if="employeeDetails">There are {{ employeeDetails.length }} employees</div>
+        <div v-if="!employees">No employees</div>
+        <div v-if="employees">There are {{ employees.length }} employees</div>
       </span>
 
       <!-- Filters -->
-      <span v-if="employeeDetails">
+      <span v-if="employees">
         <input type="text" class="border border-white h-[40px] px-[9px] rounded-md bg-transparent" @keyup="searchEmployees()"  v-model="searchText" color="white" placeholder="Please enter a firstname, lastname or email" />
         <q-select outlined v-model="filterText" color="white" :options="filterOptions" @change="filterEmployees()" label="Square outlined" />
       </span>
@@ -118,15 +114,15 @@
     <!-- Employee List Wrapper -->
     <div>
       <!-- No employees -->
-      <div v-if="!employeeDetails" class="flex mt-[60px] justify-center flex-col text-center">
+      <div v-if="!employees" class="flex mt-[60px] justify-center flex-col text-center">
         <img :src="logoSrc" class="max-w-[400px] empty-list-img" />
         <div class="my-6">There is nothing here</div>
         <div>Create a new employee by clicking the <br> New Employee button to get started</div>
       </div>
 
       <!-- Employee List -->
-      <div v-if="employeeDetails">
-         <div v-for="(employee, index) in employeeDetails">
+      <div v-if="employees">
+         <div v-for="(employee, index) in employees">
             <div class="bg-gray-400 flex justify-between flex-wrap rounded-md padding-top: 14px; mb-3">
               <div class="flex-1 p-[16px]">
                 <div class="inline-block relative">
