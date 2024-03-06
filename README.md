@@ -9,13 +9,14 @@ cd employees-backend
 
 ### Update the db connect setting in the employees-backend -> env -> DB_CONNECTION section eg.
 
+```sh
 DB_CONNECTION=mysql
 DB_HOST=localhost
 DB_PORT=33061
 DB_DATABASE=employee
 DB_USERNAME=user
 DB_PASSWORD=password
-
+```
 
 ### Insert the db tables
 
@@ -31,11 +32,9 @@ php artisan serve
 
 ## employees-frontend
 
-### open a different terminal, whilst keeping the backend api running
-
-### cd into the frontend
+### open a different terminal, cd into the frontend, whilst running the backend on a different terminal
 ```sh
-cd employees-backend
+cd employees-frontend
 ```
 
 ### Install the node modules
