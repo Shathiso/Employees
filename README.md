@@ -1,5 +1,7 @@
 # Project Setup
 
+This employees demo application consists of a Vue-3 frontend and a Laravel Backend.
+
 ## employees-backend
 
 ### cd into the backend
